@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <script src="jquery.min.js"></script>
+        <script src="options.js"></script>
+        <title>Multiview</title>
+    </head>
+    <body>
+        <h1>MultiView</h1>
+        <p><a id="open_mtv" href="multiview.html" target="_blank">Open MultiView</a></p>
+        <hr />
+        <h2>Sites</h2>
+        <div id="twitch">
+            <h3>Twitch</h3>
+            <p><input id="enable_twitch" type="checkbox" /> Enable</p>
+            <p id="twitch_status">Not connected to Twitch.</p>
+            <p><a id="connect_twitch" href="#" target="_blank">Connect with Twitch</a></p>
+        </div>
+        <div id="picarto">
+            <h3>Picarto</h3>
+            <p><input id="enable_picarto" type="checkbox" /> Enable</p>
+        </div>
+        <hr />
+        <h2>Filter</h2>
+        <p>Filter out streams by service/name.</p>
+        <table id="filter_table" border="1">
+            <thead>
+                <th>Service</th>
+                <th>Name</th>
+                <th></th>
+            </thead>
+            <tbody id="filter_body"></tbody>
+            <tfoot>
+                <td>
+                    <select id="filter_add_service">
+                        <option>Twitch</option>
+                        <option>Picarto</option>
+                    </select>
+                </td>
+                <td><input id="filter_add_name" type="text" /></td>
+                <td><input id="filter_add" type="button" value="+" /></td>
+            </tfoot>
+        </table>
+    </body>
+</html>

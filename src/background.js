@@ -15,3 +15,21 @@ chrome.webRequest.onHeadersReceived.addListener(
     },
     ['blocking', 'responseHeaders']
 );
+
+
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+    if (msg.type === "oauth") {
+        const site = msg.site;
+        const token = msg.token;
+        const key = `oauth.${site}`;
+
+        chrome.storage.sync.set({[key]: token}, () => {
+            sendResponse(true);
+        });
+    }
+});
+
+
+chrome.browserAction.onClicked.addListener(() => {
+    chrome.tabs.create({"url": "multiview.html"});
+});

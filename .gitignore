@@ -1,2 +1,5 @@
 *.zip
 *.crx
+node_modules/**
+bower_components/**
+build/**

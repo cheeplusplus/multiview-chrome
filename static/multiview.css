@@ -1,0 +1,67 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+    margin: 0px 0px 0px 0px;
+
+    background-color: black;
+}
+
+.outer {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+.nothing {
+    color: white;
+    text-align: center;
+}
+
+.settings {
+    width: 100%;
+    padding: 2em;
+    text-align: center;
+}
+
+.title {
+    font-size: x-large;
+    padding-bottom: 1em;
+}
+
+.stream {
+    text-align: center;
+}
+
+.invisible {
+    display: none;
+}
+
+.control {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    padding: 2em;
+    display: none;
+}
+
+.stream:hover .control {
+    display: block;
+}
+
+#settings_widget {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: white;
+    font-size: large;
+    cursor: pointer;
+}
+
+#settings_container {
+    background-color: rgba(0, 0, 0, 0.9);
+}

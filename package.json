@@ -1,0 +1,22 @@
+{
+  "name": "multiview-chrome",
+  "version": "0.0.0",
+  "description": "Multiview is a page that lets you embed any website into a split page view.",
+  "author": "AndrewNeo <andrew@andrewneo.com>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "bower": "^1.7.9",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-awspublish": "^3.3.0",
+    "gulp-zip": "^3.2.0",
+    "main-bower-files": "^2.13.1",
+    "path-exists": "^3.0.0",
+    "webpack-stream": "^3.2.0"
+  },
+  "dependencies": {
+    "lodash": "^4.16.4",
+    "superagent": "^2.3.0"
+  }
+}
