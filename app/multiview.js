@@ -34,6 +34,7 @@ let all_streams = [];
 let strip_stream_list = [];
 let strip_stream_list_local = [];
 let current_streams = [];
+let manual_streams = [];
 
 
 function format_streams(results) {
@@ -46,6 +47,11 @@ function format_streams(results) {
     for (strip of stripList) {
         _.pull(results, _.find(results, strip));
     }
+
+    if (manual_streams.length > 0) {
+        results = _.concat(results, manual_streams);
+    }
+
     current_streams = results;
     return results;
 }
@@ -63,6 +69,22 @@ function update_monitor() {
     Promise.all(check_list).then(_.flatten)
         .then(format_streams).then(update_display)
         .catch(e => console.error("update failed", e));
+}
+
+
+function manual_add(service, value) {
+    const model = _.find(sites.models, {"name": service});
+    if (!model) return;
+
+    const stream = {
+        "id": `manual_${service}_${value}`,
+        "service": service,
+        "name": value,
+        "isManual": true
+    };
+
+    manual_streams.push(stream);
+    update_display(format_streams(all_streams));
 }
 
 
@@ -174,8 +196,14 @@ function create_control(item, hasChat) {
     }
 
     $("<input>").appendTo(div).attr("type", "button").val("Hide").click(() => {
-        strip_stream_list_local.push(item);
-        update_monitor(); // TODO: Cache the current results so we don't have to hard refresh to make this work
+        if (item.isManual) {
+            const str = _.find(manual_streams, {"id": item.id});
+            _.pull(manual_streams, str);
+        } else {
+            strip_stream_list_local.push(item);
+        }
+
+        update_display(format_streams(all_streams));
     });
     
     /*$("<input>").appendTo(div).attr("type", "button").val("Block").click(() => {
@@ -279,6 +307,14 @@ $(document).ready(() => {
 
     $("#settings_widget").click(() => $("#settings_container").toggle());
     $("#settings_reload").click(() => update_monitor());
+
+    for (let model of sites.models) {
+        $("<option>").text(model.name).appendTo("#settings_add_type");
+    }
+
+    $("#settings_add").click(() => {
+        manual_add($("#settings_add_type option:selected").text(), $("#settings_add_value").val());
+    });
 });
 
 
