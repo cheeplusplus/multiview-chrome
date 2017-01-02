@@ -2,7 +2,33 @@ const _ = require("lodash");
 const sites = require("./sites");
 
 
-// Stuff
+// Chat!
+
+function toggle_chat(id) {
+    const mainWindow = flex_pen[id];
+    const chatZone = $(".chat", mainWindow);
+    const chatId = `chat_${id}`;
+
+    if (chat_pen[chatId]) {
+        // Exists, remove
+        chatZone.empty();
+        delete chat_pen[chatId];
+        return;
+    }
+
+    const mainItem = _.find(current_streams, {"id": id});
+
+    chat_pen[chatId] = create_div({
+        "id": chatId,
+        "service": `${mainItem.service} Chat`,
+        "name": mainItem.name
+    }, true);
+
+    chatZone.replaceWith(chat_pen[chatId]);
+}
+
+
+// Content
 
 let all_streams = [];
 let strip_stream_list = [];
@@ -40,8 +66,11 @@ function update_monitor() {
 }
 
 
+// Layout
+
 const FLEX_MAX = 9; // max number of items to show at once
 let flex_pen = {};
+let chat_pen = {};
 
 
 function update_layout() {
@@ -94,15 +123,21 @@ function update_layout() {
 }
 
 
-function create_div(result) {
+function create_div(result, is_chat = false) {
     const model = _.find(sites.models, {"name": result.service});
     if (!model) return;
 
-    let div = $("<div>").attr("id", result.id).addClass("stream");
+    let div = $("<div>").attr("id", result.id);
+
+    if (is_chat) {
+        div.addClass("chat");
+    } else {
+        div.addClass("stream");
+    }
 
     let embed = model.embed.replace("%s", result.name);
 
-    if (model.isHLS) {
+    if (!is_chat && model.isHLS) {
         const video = $("<video>").prop("controls", true).prop("muted", true).css("width", "100%").css("height", "100%").appendTo(div);
         const vtag = video[0];
 
@@ -116,22 +151,37 @@ function create_div(result) {
         $(embed).appendTo(div);
     }
 
-    create_control(result).appendTo(div);
+    if (!is_chat) {
+        if (model.hasChat) {
+            $("<div>").addClass("chat").appendTo(div);
+        }
+
+        create_control(result, model.hasChat).appendTo(div);
+    }
 
     return div;
 }
 
 
-function create_control(item) {
+function create_control(item, hasChat) {
     let div = $("<div>").addClass("control");
     $("<div>").addClass("title").text(item.name).appendTo(div);
+    
+    if (hasChat) {
+        $("<input>").appendTo(div).attr("type", "button").val("Toggle chat").click(() => {
+            toggle_chat(item.id);
+        });
+    }
+
     $("<input>").appendTo(div).attr("type", "button").val("Hide").click(() => {
         strip_stream_list_local.push(item);
         update_monitor(); // TODO: Cache the current results so we don't have to hard refresh to make this work
     });
+    
     /*$("<input>").appendTo(div).attr("type", "button").val("Block").click(() => {
         // TODO: Block
     });*/
+    
     return div;
 }
 
@@ -157,6 +207,12 @@ function update_display(results) {
 
             flex_pen[id].remove();
             delete flex_pen[id];
+
+            // Remove chat
+            const chatId = `chat_${id}`;
+            if (chat_pen[chatId]) {
+                delete chat_pen[chatId];
+            }
         }
     }
 

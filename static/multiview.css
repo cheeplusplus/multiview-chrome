@@ -34,6 +34,20 @@ html, body {
     text-align: center;
 }
 
+.chat {
+    position: absolute;
+    height: 100%;
+    width: 40%;
+    min-width: 360px;
+    top: 0px;
+    right: 0px;
+    opacity: 0.3;
+}
+
+.chat:hover {
+    opacity: 0.9;
+}
+
 .invisible {
     display: none;
 }
