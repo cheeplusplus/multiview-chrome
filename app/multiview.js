@@ -134,13 +134,21 @@ function update_layout() {
     for (let x = 0; x < cols; x++) {
         for (let y = 0; y < rows; y++) {
             const i = (y * cols) + x;
-            const item = flex_pen[items[i]];
+            const item_id = items[i];
+            const item = flex_pen[item_id];
             if (!item) continue;
+
+            item.css("position", "absolute");
+
+            if (item.data("isExpanded")) {
+                item.css("top", 0).css("left", 0).css("width", window.innerWidth).css("height", window.innerHeight).addClass("ontop");
+                continue;
+            }
 
             const top = height * y;
             const left = width * x;
 
-            item.css("position", "absolute").css("top", top).css("left", left).css("width", width).css("height", height);
+            item.css("top", top).css("left", left).css("width", width).css("height", height).removeClass("ontop");
         }
     }
 }
@@ -179,14 +187,14 @@ function create_div(result, is_chat = false) {
             $("<div>").addClass("chat").addClass("invisible").appendTo(div);
         }
 
-        create_control(result, model.hasChat).appendTo(div);
+        create_control(result, model.hasChat, div).appendTo(div);
     }
 
     return div;
 }
 
 
-function create_control(item, hasChat) {
+function create_control(item, hasChat, parent) {
     let div = $("<div>").addClass("control");
     $("<div>").addClass("title").text(item.name).appendTo(div);
     
@@ -204,7 +212,13 @@ function create_control(item, hasChat) {
             strip_stream_list_local.push(item);
         }
 
-        update_display(format_streams(all_streams));
+        update_layout();
+    });
+
+    $("<input>").appendTo(div).attr("type", "button").val("Expand").click(() => {
+        const isExpanded = parent.data("isExpanded");
+        parent.data("isExpanded", !isExpanded);
+        update_layout();
     });
     
     /*$("<input>").appendTo(div).attr("type", "button").val("Block").click(() => {

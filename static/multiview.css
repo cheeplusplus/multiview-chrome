@@ -23,6 +23,7 @@ html, body {
     width: 100%;
     padding: 2em;
     text-align: center;
+    z-index: 1000;
 }
 
 .title {
@@ -32,6 +33,7 @@ html, body {
 
 .stream {
     text-align: center;
+    z-index: 5;
 }
 
 .stream .chat {
@@ -42,6 +44,7 @@ html, body {
     top: 0px;
     right: 0px;
     opacity: 0.3;
+    z-index: 6;
 }
 
 .stream .chat:hover {
@@ -50,6 +53,10 @@ html, body {
 
 .invisible {
     display: none;
+}
+
+.ontop {
+    z-index: 100;
 }
 
 .control {
@@ -63,6 +70,7 @@ html, body {
     left: 1em;
     padding: 2em;
     display: none;
+    z-index: 10;
 }
 
 .stream:hover .control {
