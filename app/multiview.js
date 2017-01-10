@@ -12,6 +12,7 @@ function toggle_chat(id) {
     if (chat_pen[chatId]) {
         // Exists, remove
         chatZone.empty();
+        chatZone.addClass("invisible");
         delete chat_pen[chatId];
         return;
     }
@@ -175,7 +176,7 @@ function create_div(result, is_chat = false) {
 
     if (!is_chat) {
         if (model.hasChat) {
-            $("<div>").addClass("chat").appendTo(div);
+            $("<div>").addClass("chat").addClass("invisible").appendTo(div);
         }
 
         create_control(result, model.hasChat).appendTo(div);
