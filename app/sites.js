@@ -7,7 +7,7 @@ const site_picarto = require("./site_helper/picarto");
 
 exports.models = [
     {"name": "YouTube", "embed": "<iframe width=\"100%\" height=\"100%\" src=\"http://www.youtube.com/embed/%s\" frameborder=\"0\" allowfullscreen></iframe>"},
-    {"name": "Twitch", "embed": "<iframe src=\"http://www.twitch.tv/%s/embed\" frameborder=\"0\" scrolling=\"no\" height=\"100%\" width=\"100%\"></iframe>", "hasChat": true},
+    {"name": "Twitch", "embed": "<iframe src=\"http://player.twitch.tv/?channel=%s&muted=true\" frameborder=\"0\" scrolling=\"no\" height=\"100%\" width=\"100%\"></iframe>", "hasChat": true},
     {"name": "Twitch Chat", "embed": "<iframe src=\"http://www.twitch.tv/%s/chat?popout=\" frameborder=\"0\" scrolling=\"no\" height=\"100%\" width=\"100%\"></iframe>"},
     {"name": "Picarto", "embed": "https://edge4-us-east.picarto.tv/hls/%s/index.m3u8", "isHLS": true, "hasChat": true},
     {"name": "Picarto Chat", "embed": "<iframe src=\"https://picarto.tv/chatpopout/%s/public\" frameborder=\"0\" scrolling=\"no\" height=\"100%\" width=\"100%\"></iframe>"},
