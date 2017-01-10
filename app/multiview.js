@@ -212,7 +212,7 @@ function create_control(item, hasChat, parent) {
             strip_stream_list_local.push(item);
         }
 
-        update_layout();
+        update_display(format_streams(all_streams));
     });
 
     $("<input>").appendTo(div).attr("type", "button").val("Expand").click(() => {
