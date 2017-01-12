@@ -1,6 +1,6 @@
 {
     "name": "MultiView",
-    "version": "2.1",
+    "version": "2.2",
     "manifest_version": 2,
     "description": "Multiview is a page that lets you embed any website into a split page view.",
     "icons": {
