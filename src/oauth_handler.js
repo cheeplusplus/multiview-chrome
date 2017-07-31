@@ -5,6 +5,8 @@ let site;
 const p = document.location.pathname;
 if (p.endsWith("twitch_oauth.html")) {
     site = "twitch";
+} else if (p.endsWith("picarto_oauth.html")) {
+    site = "picarto";
 } else {
     throw new Error("Unknown oauth page");
 }

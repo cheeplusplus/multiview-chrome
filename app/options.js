@@ -12,6 +12,7 @@ $(document).ready(() => {
     $("#enable_twitch").change((e) => {
         update_sitelist("Twitch", $(e.target).prop("checked"));
     });
+    $("#connect_picarto").attr("href", sites.get_picarto_oauth_url());
     $("#enable_picarto").change((e) => {
         update_sitelist("Picarto", $(e.target).prop("checked"));
     });
@@ -98,6 +99,12 @@ function update_vars(keys) {
             } else {
                 $("#twitch_status").text("Not connected to Twitch.");
             }
+        } else if (key === "oauth.picarto") {
+            if (value) {
+                $("#picarto_status").text("Connected to Picarto.\n" + value);
+            } else {
+                $("#picarto_status").text("Not connected to Picarto.");
+            }
         } else if (key === "sitelist") {
             sitelist = value || [];
             $("#enable_twitch").prop("checked", _.includes(value, "Twitch"));
@@ -122,4 +129,4 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 });
 
 
-chrome.storage.sync.get(["sitelist", "user.blacklist", "oauth.twitch"], update_vars);
+chrome.storage.sync.get(["sitelist", "user.blacklist", "oauth.twitch", "oauth.picarto"], update_vars);

@@ -14,7 +14,7 @@
         "scripts": ["background.js"]
     },
     "content_scripts": [{
-        "matches": ["https://andrewneo.github.io/multiview-chrome/twitch_oauth.html"],
+        "matches": ["https://andrewneo.github.io/multiview-chrome/*_oauth.html"],
         "js": ["oauth_handler.js"]
     }],
     "browser_action": {

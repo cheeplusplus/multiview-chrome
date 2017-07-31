@@ -20,3 +20,4 @@ exports.models = [
 exports.check_twitch = site_twitch.get_follows;
 exports.get_twitch_oauth_url = site_twitch.get_oauth_url;
 exports.check_picarto = site_picarto.get_follows;
+exports.get_picarto_oauth_url = site_picarto.get_oauth_url;

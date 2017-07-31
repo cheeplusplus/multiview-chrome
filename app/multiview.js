@@ -59,13 +59,13 @@ function format_streams(results) {
 
 
 let twitch_enabled, twitch_api_key;
-let picarto_enabled;
+let picarto_enabled, picarto_api_key;
 
 
 function update_monitor() {
     let check_list = [];
     if (twitch_enabled) check_list.push(sites.check_twitch(twitch_api_key));
-    if (picarto_enabled) check_list.push(sites.check_picarto());
+    if (picarto_enabled) check_list.push(sites.check_picarto(picarto_api_key));
 
     Promise.all(check_list).then(_.flatten)
         .then(format_streams).then(update_display)
@@ -167,20 +167,7 @@ function create_div(result, is_chat = false) {
     }
 
     let embed = model.embed.replace("%s", result.name);
-
-    if (!is_chat && model.isHLS) {
-        const video = $("<video>").prop("controls", true).prop("muted", true).css("width", "100%").css("height", "100%").appendTo(div);
-        const vtag = video[0];
-
-        const hls = new Hls();
-        hls.loadSource(embed);
-        hls.attachMedia(vtag);
-        hls.on(Hls.Events.MANIFEST_PARSED, () => vtag.play());
-
-        // TODO: attempt restarting if stopped, possibly only when update_layout is called
-    } else {
-        $(embed).appendTo(div);
-    }
+    $(embed).appendTo(div);
 
     if (!is_chat) {
         if (model.hasChat) {
@@ -291,6 +278,13 @@ function update_vars(keys) {
                 twitch_api_key = null;
                 twitch_enabled = false;
             }
+        } else if (key === "oauth.picarto") {
+            if (value) {
+                picarto_api_key = value;
+            } else {
+                picarto_api_key = null;
+                picarto_enabled = false;
+            }
         } else if (key === "sitelist") {
             twitch_enabled = _.includes(value, "Twitch");
             picarto_enabled = _.includes(value, "Picarto");
@@ -318,7 +312,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 
 $(document).ready(() => {
     chrome.alarms.onAlarm.addListener(alarm_callback);
-    chrome.storage.sync.get(["sitelist", "user.blacklist", "oauth.twitch"], update_vars);
+    chrome.storage.sync.get(["sitelist", "user.blacklist", "oauth.twitch", "oauth.picarto"], update_vars);
 
     $("#settings_widget").click(() => $("#settings_container").toggle());
     $("#settings_reload").click(() => update_monitor());
