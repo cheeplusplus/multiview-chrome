@@ -1,7 +1,7 @@
 {
   "name": "multiview-chrome",
   "version": "0.0.0",
-  "description": "Multiview is a page that lets you embed any website into a split page view.",
+  "description": "Multiview is a browser addon that lets you embed any website into a split page view.",
   "author": "AndrewNeo <andrew@andrewneo.com>",
   "license": "MIT",
   "private": true,

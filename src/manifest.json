@@ -2,7 +2,7 @@
     "name": "MultiView",
     "version": "2.2",
     "manifest_version": 2,
-    "description": "Multiview is a page that lets you embed any website into a split page view.",
+    "description": "Multiview is a browser addon that lets you embed any website into a split page view.",
     "icons": {
         "32": "icon32.png",
         "48": "icon48.png",
