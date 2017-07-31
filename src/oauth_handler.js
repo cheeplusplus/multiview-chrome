@@ -8,7 +8,7 @@ if (p.endsWith("twitch_oauth.html")) {
 } else if (p.endsWith("picarto_oauth.html")) {
     site = "picarto";
 } else {
-    throw new Error("Unknown oauth page");
+    throw new Error("Unknown oauth page.");
 }
 
 const h = document.location.hash;
@@ -32,9 +32,13 @@ if (token) {
     let msg = {"type": "oauth", "site": site, "token": token};
 
     chrome.runtime.sendMessage(undefined, msg, null, (res) => {
-        console.log("Updated oauth token.");
-        document.write("\nOAuth token saved.");
+        if (res.handled) {
+            console.log("Updated oauth token.");
+            document.write("\nOAuth token saved. You may close this window.");
+            window.close();
+        }
     });
 } else {
+    document.write("\nError: No token found.");
     throw new Error("No token found.");
 }

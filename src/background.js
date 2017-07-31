@@ -24,8 +24,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         const key = `oauth.${site}`;
 
         chrome.storage.sync.set({[key]: token}, () => {
-            sendResponse(true);
+            sendResponse({"handled": true});
         });
+
+        return true;
     }
 });
 

@@ -95,15 +95,19 @@ function update_vars(keys) {
 
         if (key === "oauth.twitch") {
             if (value) {
-                $("#twitch_status").text("Connected to Twitch.\n" + value);
+                $("#twitch_status").show();
+                $("#connect_twitch").hide();
             } else {
-                $("#twitch_status").text("Not connected to Twitch.");
+                $("#twitch_status").hide();
+                $("#connect_twitch").show();
             }
         } else if (key === "oauth.picarto") {
             if (value) {
-                $("#picarto_status").text("Connected to Picarto.\n" + value);
+                $("#picarto_status").show();
+                $("#connect_picarto").hide();
             } else {
-                $("#picarto_status").text("Not connected to Picarto.");
+                $("#picarto_status").hide();
+                $("#connect_picarto").show();
             }
         } else if (key === "sitelist") {
             sitelist = value || [];
