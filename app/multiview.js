@@ -64,12 +64,27 @@ let picarto_enabled, picarto_api_key;
 
 function update_monitor() {
     let check_list = [];
-    if (twitch_enabled) check_list.push(sites.check_twitch(twitch_api_key));
-    if (picarto_enabled) check_list.push(sites.check_picarto(picarto_api_key));
+    if (twitch_enabled) check_list.push(sites.check_twitch(twitch_api_key).catch(e => {
+        console.error("Twitch update failed", e);
+        if (e.status === 403) {
+            // Handle
+        }
+        return Promise.resolve();
+    }));
+
+    if (picarto_enabled) check_list.push(sites.check_picarto(picarto_api_key).catch(e => {
+        console.error("Picarto update failed", e);
+        if (e.status === 403) {
+            // Handle
+        }
+        return Promise.resolve();
+    }));
 
     Promise.all(check_list).then(_.flatten)
         .then(format_streams).then(update_display)
-        .catch(e => console.error("update failed", e));
+        .catch(e => {
+            console.error("update failed", e);
+        });
 }
 
 
