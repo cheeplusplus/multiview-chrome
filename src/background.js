@@ -10,7 +10,7 @@ chrome.webRequest.onHeadersReceived.addListener(
         return {responseHeaders: headers};
     },
     {
-        urls: [ 'https://picarto.tv/streampopout/*', 'https://picarto.tv/chatpopout/*' ], // Override Picarto's frame options to allow embedding
+        urls: [ 'https://picarto.tv/streampopout/*', 'https://picarto.tv/chatpopout/*', 'https://www.twitch.tv/*/chat*' ], // Override frame options to allow embedding
         types: [ 'sub_frame' ]
     },
     ['blocking', 'responseHeaders']
