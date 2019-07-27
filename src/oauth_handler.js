@@ -34,11 +34,11 @@ if (token) {
     chrome.runtime.sendMessage(undefined, msg, null, (res) => {
         if (res.handled) {
             console.log("Updated oauth token.");
-            document.write("\nOAuth token saved. You may close this window.");
+            document.getElementById("content").text = "OAuth token saved. You may close this window.";
             window.close();
         }
     });
 } else {
-    document.write("\nError: No token found.");
+    document.getElementById("content").text = "Error: No token found.";
     throw new Error("No token found.");
 }
