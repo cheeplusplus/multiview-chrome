@@ -17,7 +17,7 @@ exports.get_follows = (access_token) => {
         "Authorization": `OAuth ${access_token}`
     };
 
-    return agent.get(TWITCH_FOLLOW_URL).set(headers).accept("application/vnd.twitchtv.v3+json").send().then((res) => {
+    return agent.get(TWITCH_FOLLOW_URL).set(headers).accept("application/vnd.twitchtv.v5+json").send().then((res) => {
         const body = res.body;
         if (!body || body["_total"] < 1 || !body["streams"]) {
             return [];
@@ -35,5 +35,5 @@ exports.get_follows = (access_token) => {
 
 
 exports.get_oauth_url = () => {
-    return `https://api.twitch.tv/kraken/oauth2/authorize?response_type=token&client_id=${TWITCH_CLIENT_ID}&redirect_uri=${TWITCH_OAUTH_REDIRECT}&scope=user_read&force_verify=true"`;
+    return `https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${TWITCH_CLIENT_ID}&redirect_uri=${TWITCH_OAUTH_REDIRECT}&scope=user_read&force_verify=true"`;
 };
