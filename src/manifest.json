@@ -8,13 +8,13 @@
         "48": "icon48.png",
         "128": "icon128.png"
     },
-    "homepage_url": "https://andrewneo.github.com/multiview-chrome/",
+    "homepage_url": "https://cheeplusplus.github.com/multiview-chrome/",
     "options_page": "options.html",
     "background": {
         "scripts": ["background.js"]
     },
     "content_scripts": [{
-        "matches": ["https://andrewneo.github.io/multiview-chrome/*_oauth.html"],
+        "matches": ["https://cheeplusplus.github.io/multiview-chrome/*_oauth.html"],
         "js": ["oauth_handler.js"]
     }],
     "browser_action": {

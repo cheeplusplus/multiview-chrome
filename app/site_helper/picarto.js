@@ -3,7 +3,7 @@ const agent = require("superagent");
 
 const PICARTO_FOLLOW_URL = "https://api.picarto.tv/v1/user/following?priority_online=true";
 const PICARTO_CLIENT_ID = "LDnggcQcithHW0d2";
-const PICARTO_OAUTH_REDIRECT = "https://andrewneo.github.io/multiview-chrome/picarto_oauth.html";
+const PICARTO_OAUTH_REDIRECT = "https://cheeplusplus.github.io/multiview-chrome/picarto_oauth.html";
 
 
 exports.get_follows = (access_token) => {

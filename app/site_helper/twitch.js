@@ -3,7 +3,7 @@ const agent = require("superagent");
 
 const TWITCH_FOLLOW_URL = "https://api.twitch.tv/kraken/streams/followed?limit=100&stream_type=live";
 const TWITCH_CLIENT_ID = "lvbo5m1mea23v189xze52lzz04pzhgf";
-const TWITCH_OAUTH_REDIRECT = "https://andrewneo.github.io/multiview-chrome/twitch_oauth.html";
+const TWITCH_OAUTH_REDIRECT = "https://cheeplusplus.github.io/multiview-chrome/twitch_oauth.html";
 
 
 exports.get_follows = (access_token) => {
