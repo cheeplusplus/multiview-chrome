@@ -1,6 +1,6 @@
+const $ = require("jquery");
 const _ = require("lodash");
 const sites = require("./sites");
-
 
 // Chat!
 

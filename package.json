@@ -5,18 +5,20 @@
   "author": "Kauko <kauko@biosynth.link>",
   "license": "MIT",
   "private": true,
-  "devDependencies": {
-    "bower": "^1.7.9",
-    "del": "^2.2.2",
-    "gulp": "^3.9.1",
-    "gulp-awspublish": "^3.3.0",
-    "gulp-zip": "^3.2.0",
-    "main-bower-files": "^2.13.1",
-    "path-exists": "^3.0.0",
-    "webpack-stream": "^3.2.0"
+  "scripts": {
+    "build": "npm-run-all build:src build:zip",
+    "build:src": "parcel build src/*.html src/background.js src/oauth_handler.js --no-source-maps",
+    "build:zip": "cd dist/ && bestzip ../multiview.zip *"
   },
   "dependencies": {
-    "lodash": "^4.16.4",
-    "superagent": "^2.3.0"
+    "jquery": "^3.5.1",
+    "lodash": "^4.17.15",
+    "superagent": "^5.2.2"
+  },
+  "devDependencies": {
+    "bestzip": "^2.1.5",
+    "npm-run-all": "^4.1.5",
+    "parcel": "^1.12.4",
+    "parcel-plugin-static-files-copy": "^2.4.2"
   }
 }
