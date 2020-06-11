@@ -1,5 +1,7 @@
 // Handle oauth redirect
 
+import type { BackgroundMessage, BackgroundMessageResponse } from "./background";
+
 let site;
 
 const p = document.location.pathname;
@@ -19,7 +21,7 @@ if (!h || h.length < 2) {
 let token;
 
 const args = h.substring(1).split("&");
-for (let arg of args) {
+for (const arg of args) {
     const tags = arg.split("=");
     if (tags[0] === "access_token") {
         token = tags[1];
@@ -29,16 +31,22 @@ for (let arg of args) {
 if (token) {
     console.log("Updating oauth token...");
 
-    let msg = {"type": "oauth", "site": site, "token": token};
+    const msg: BackgroundMessage = { "type": "oauth", "site": site, "token": token };
 
-    chrome.runtime.sendMessage(undefined, msg, null, (res) => {
+    chrome.runtime.sendMessage(msg, (res: BackgroundMessageResponse) => {
         if (res.handled) {
             console.log("Updated oauth token.");
-            document.getElementById("content").text = "OAuth token saved. You may close this window.";
+            const contentField = document.getElementById("content") as HTMLDivElement;
+            if (contentField) {
+                contentField.textContent = "OAuth token saved. You may close this window.";
+            }
             window.close();
         }
     });
 } else {
-    document.getElementById("content").text = "Error: No token found.";
+    const contentField = document.getElementById("content") as HTMLDivElement;
+    if (contentField) {
+        contentField.textContent = "Error: No token found.";
+    }
     throw new Error("No token found.");
 }
