@@ -2,6 +2,7 @@ import $ from "jquery";
 import _ from "lodash";
 import type { SettingsKeys, SiteItem } from "./options";
 import * as sites from "./site_helper";
+import { SiteHelper } from "./site_helper/interfaces";
 
 // Chat!
 
@@ -23,7 +24,7 @@ function toggle_chat(id: string) {
         const chatDiv = create_div({
             "id": chatId,
             "service": `${mainItem.service} Chat`,
-            "name": mainItem.name
+            "name": mainItem.name,
         }, true);
 
         if (chatDiv) {
@@ -36,7 +37,7 @@ function toggle_chat(id: string) {
 
 // Content
 
-type StreamItem = SiteItem & { id: string; isManual?: boolean };
+type StreamItem = SiteItem & { id: string; isManual?: boolean; };
 
 let all_streams: StreamItem[] = [];
 let strip_stream_list: SiteItem[] = [];
@@ -73,7 +74,7 @@ let picarto_api_key: string | undefined;
 
 function update_monitor() {
     const check_list: Promise<sites.GetFollowsResponse>[] = [];
-    if (twitch_enabled) check_list.push(sites.check_twitch(twitch_api_key).catch((e) => {
+    if (twitch_enabled) check_list.push(sites.Twitch.GetFollows(twitch_api_key).catch((e) => {
         console.error("Twitch update failed", e);
         if (e.status === 403) {
             // Handle
@@ -81,7 +82,7 @@ function update_monitor() {
         return Promise.resolve({} as any);
     }));
 
-    if (picarto_enabled) check_list.push(sites.check_picarto(picarto_api_key).catch((e) => {
+    if (picarto_enabled) check_list.push(sites.Picarto.GetFollows(picarto_api_key).catch((e) => {
         console.error("Picarto update failed", e);
         if (e.status === 403) {
             // Handle
@@ -90,7 +91,8 @@ function update_monitor() {
     }));
 
     Promise.all(check_list).then(_.flatten)
-        .then(format_streams).then(update_display)
+        .then(format_streams)
+        .then(update_display)
         .catch(e => {
             console.error("update failed", e);
         });
@@ -105,7 +107,7 @@ function manual_add(service: string, value: string) {
         "id": `manual_${service}_${value}`,
         "service": service,
         "name": value,
-        "isManual": true
+        "isManual": true,
     };
 
     manual_streams.push(stream);
@@ -194,7 +196,8 @@ function create_div(result: StreamItem, is_chat = false) {
     }
 
     const embed = model.embed.replace("%s", result.name);
-    $(embed).appendTo(div);
+    const embedElem = $(embed) as JQuery<HTMLIFrameElement>;
+    embedElem.appendTo(div);
 
     if (!is_chat) {
         if (model.hasChat) {

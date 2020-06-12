@@ -1,5 +1,11 @@
 chrome.webRequest.onHeadersReceived.addListener(
     (info) => {
+        // Only use for tabs belonging to this extension
+        const views = chrome.extension.getViews({ "tabId": info.tabId, "type": "tab" } as any);
+        if (!views || views.length < 1) {
+            return;
+        }
+
         const headers = info.responseHeaders || [];
         for (let i = headers.length - 1; i >= 0; --i) {
             const header = headers[i].name.toLowerCase();
@@ -10,7 +16,7 @@ chrome.webRequest.onHeadersReceived.addListener(
         return { "responseHeaders": headers };
     },
     {
-        "urls": ["https://picarto.tv/streampopout/*", "https://picarto.tv/chatpopout/*", "https://www.twitch.tv/*/chat*"], // Override frame options to allow embedding
+        "urls": ["https://picarto.tv/streampopout/*", "https://picarto.tv/chatpopout/*"], // Override frame options to allow embedding
         "types": ["sub_frame"]
     },
     ["blocking", "responseHeaders"]

@@ -13,11 +13,11 @@ let blocklist: SiteItem[] = [];
 
 
 $(document).ready(() => {
-    $("#connect_twitch").attr("href", sites.get_twitch_oauth_url());
+    $("#connect_twitch").attr("href", sites.Twitch.GetOauthUrl());
     $("#enable_twitch").change((e) => {
         update_sitelist("Twitch", $(e.target).prop("checked"));
     });
-    $("#connect_picarto").attr("href", sites.get_picarto_oauth_url());
+    $("#connect_picarto").attr("href", sites.Picarto.GetOauthUrl());
     $("#enable_picarto").change((e) => {
         update_sitelist("Picarto", $(e.target).prop("checked"));
     });

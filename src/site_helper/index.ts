@@ -1,11 +1,5 @@
-import * as site_picarto from "./picarto";
-import * as site_twitch from "./twitch";
-
-export interface GetFollowsResponse {
-    id: string;
-    service: string;
-    name: string;
-}
+import { PicartoSite } from "./picarto";
+import { TwitchSite } from "./twitch";
 
 const current_domain = chrome.runtime.id;
 
@@ -19,7 +13,6 @@ export const models = [
     { "name": "Custom", "embed": "%s" },
 ];
 
-export const check_twitch = site_twitch.get_follows;
-export const get_twitch_oauth_url = site_twitch.get_oauth_url;
-export const check_picarto = site_picarto.get_follows;
-export const get_picarto_oauth_url = site_picarto.get_oauth_url;
+export type { GetFollowsResponse } from "./interfaces";
+export const Picarto = new PicartoSite();
+export const Twitch = new TwitchSite();

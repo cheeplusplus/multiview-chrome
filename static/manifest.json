@@ -2,6 +2,7 @@
     "name": "MultiView",
     "version": "2.3.4",
     "manifest_version": 2,
+    "minimum_chrome_version": "54",
     "description": "Multiview is a browser addon that lets you embed any website into a split page view.",
     "icons": {
         "32": "icon32.png",
@@ -11,17 +12,35 @@
     "homepage_url": "https://cheeplusplus.github.com/multiview-chrome/",
     "options_page": "options.html",
     "background": {
-        "scripts": ["background.js"]
+        "scripts": [
+            "background.js"
+        ]
     },
-    "content_scripts": [{
-        "matches": ["https://cheeplusplus.github.io/multiview-chrome/*_oauth.html"],
-        "js": ["oauth_handler.js"]
-    }],
+    "content_scripts": [
+        {
+            "matches": [
+                "https://cheeplusplus.github.io/multiview-chrome/*_oauth.html"
+            ],
+            "js": [
+                "oauth_handler.js"
+            ]
+        },
+        {
+            "matches": [
+                "https://picarto.tv/streampopout/*/public"
+            ],
+            "js": [
+                "picarto_frame_handler.js"
+            ],
+            "all_frames": true
+        }
+    ],
     "browser_action": {
         "default_title": "Open MultiView"
     },
     "permissions": [
-        "<all_urls>",
+        "https://picarto.tv/*",
+        "https://api.picarto.tv/*",
         "webRequest",
         "webRequestBlocking",
         "alarms",
