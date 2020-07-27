@@ -17,9 +17,11 @@ interface TwitchApiResponse {
 }
 
 export class TwitchSite extends SiteHelper {
-    GetFollows(access_token?: string): Promise<GetFollowsResponse[]> {
+    async GetFollows(): Promise<GetFollowsResponse[]> {
+        const access_token = await this.getAccessToken();
+
         if (!access_token) {
-            return Promise.resolve([]);
+            return [];
         }
 
         const headers = {
@@ -28,8 +30,13 @@ export class TwitchSite extends SiteHelper {
             "Authorization": `OAuth ${access_token}`
         };
 
-        return agent.get(TWITCH_FOLLOW_URL).set(headers).accept("application/vnd.twitchtv.v5+json").send().then((res) => {
+        try {
+            const res = await agent.get(TWITCH_FOLLOW_URL)
+                .set(headers)
+                .accept("application/vnd.twitchtv.v5+json")
+                .send();
             const body = res.body as TwitchApiResponse;
+
             if (!body || body["_total"] < 1 || !body["streams"]) {
                 return [];
             }
@@ -41,10 +48,20 @@ export class TwitchSite extends SiteHelper {
                     "name": stream.channel.name
                 } as GetFollowsResponse;
             }).filter("name").value();
-        });
+        } catch (err) {
+            if (err.status === 403) {
+                this.revokeAccessToken();
+            }
+
+            throw err;
+        }
     }
 
     GetOauthUrl(): string {
         return `https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${TWITCH_CLIENT_ID}&redirect_uri=${TWITCH_OAUTH_REDIRECT}&scope=user_read&force_verify=true"`;
+    }
+
+    get OAuthSettingsKey() {
+        return "oauth.twitch";
     }
 }

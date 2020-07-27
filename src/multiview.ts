@@ -2,7 +2,6 @@ import $ from "jquery";
 import _ from "lodash";
 import type { SettingsKeys, SiteItem } from "./options";
 import * as sites from "./site_helper";
-import { SiteHelper } from "./site_helper/interfaces";
 
 // Chat!
 
@@ -40,13 +39,23 @@ function toggle_chat(id: string) {
 type StreamItem = SiteItem & { id: string; isManual?: boolean; };
 
 let all_streams: StreamItem[] = [];
+const all_streams_by_provider: { [name: string]: StreamItem[] } = {};
 let strip_stream_list: SiteItem[] = [];
 const strip_stream_list_local: StreamItem[] = [];
 let current_streams: StreamItem[] = [];
 const manual_streams: StreamItem[] = [];
 
 
-function format_streams(results: StreamItem[]) {
+function format_streams(provider: string, results: StreamItem[]) {
+    // Update the provider
+    all_streams_by_provider[provider] = results;
+
+    // Pass all values into formatter
+    const all_results = _.chain(all_streams_by_provider).values().flatten().value();
+    return format_streams_all(all_results);
+}
+
+function format_streams_all(results: StreamItem[]) {
     all_streams = results;
 
     // TODO: Add reordering based on a priority
@@ -67,35 +76,27 @@ function format_streams(results: StreamItem[]) {
 
 
 let twitch_enabled: boolean;
-let twitch_api_key: string | undefined;
 let picarto_enabled: boolean;
-let picarto_api_key: string | undefined;
 
 
-function update_monitor() {
-    const check_list: Promise<sites.GetFollowsResponse>[] = [];
-    if (twitch_enabled) check_list.push(sites.Twitch.GetFollows(twitch_api_key).catch((e) => {
-        console.error("Twitch update failed", e);
-        if (e.status === 403) {
-            // Handle
-        }
-        return Promise.resolve({} as any);
-    }));
+async function update_monitor() {
+    if (twitch_enabled) {
+        try {
+            const twitchStreams = await sites.Twitch.GetFollows();
+            update_display(format_streams("twitch", twitchStreams));
+        } catch (e) {
+            console.error("Twitch update failed", e);
+        };
+    }
 
-    if (picarto_enabled) check_list.push(sites.Picarto.GetFollows(picarto_api_key).catch((e) => {
-        console.error("Picarto update failed", e);
-        if (e.status === 403) {
-            // Handle
-        }
-        return Promise.resolve({} as any);
-    }));
-
-    Promise.all(check_list).then(_.flatten)
-        .then(format_streams)
-        .then(update_display)
-        .catch(e => {
-            console.error("update failed", e);
-        });
+    if (picarto_enabled) {
+        try {
+            const picartoStreams = await sites.Picarto.GetFollows();
+            update_display(format_streams("picarto", picartoStreams));
+        } catch (e) {
+            console.error("Picarto update failed", e);
+        };
+    }
 }
 
 
@@ -111,7 +112,7 @@ function manual_add(service: string, value: string) {
     };
 
     manual_streams.push(stream);
-    update_display(format_streams(all_streams));
+    update_display(format_streams("manual", all_streams));
 }
 
 
@@ -229,7 +230,7 @@ function create_control(item: StreamItem, hasChat: boolean = false, parent: JQue
             strip_stream_list_local.push(item);
         }
 
-        update_display(format_streams(all_streams));
+        update_display(format_streams_all(all_streams));
     });
 
     $("<input>").appendTo(div).attr("type", "button").val("Expand").click(() => {
@@ -286,7 +287,9 @@ function update_display(results: StreamItem[]) {
 
 function alarm_callback(alarm: chrome.alarms.Alarm) {
     if (alarm.name === "mv-monitor") {
-        update_monitor();
+        update_monitor().catch((err) => {
+            console.error("Failed to update_monitor", err);
+        });
     }
 }
 
@@ -301,23 +304,7 @@ chrome.alarms.create("mv-monitor", {
 
 function update_vars(keys: SettingsKeys) {
     Object.keys(keys).forEach((key) => {
-        if (key === "oauth.twitch") {
-            const value = keys[key];
-            if (value) {
-                twitch_api_key = value;
-            } else {
-                twitch_api_key = undefined;
-                twitch_enabled = false;
-            }
-        } else if (key === "oauth.picarto") {
-            const value = keys[key];
-            if (value) {
-                picarto_api_key = value;
-            } else {
-                picarto_api_key = undefined;
-                picarto_enabled = false;
-            }
-        } else if (key === "sitelist") {
+        if (key === "sitelist") {
             const value = keys[key];
             twitch_enabled = _.includes(value, "Twitch");
             picarto_enabled = _.includes(value, "Picarto");
@@ -327,7 +314,9 @@ function update_vars(keys: SettingsKeys) {
         }
     });
 
-    update_monitor();
+    update_monitor().catch((err) => {
+        console.error("Failed to update_monitor", err);
+    });
 }
 
 
@@ -349,7 +338,11 @@ $(document).ready(() => {
     chrome.storage.sync.get(["sitelist", "user.blacklist", "oauth.twitch", "oauth.picarto"], (k) => update_vars(k as SettingsKeys));
 
     $("#settings_widget").click(() => $("#settings_container").toggle());
-    $("#settings_reload").click(() => update_monitor());
+    $("#settings_reload").click(
+        () => update_monitor().catch((err) => {
+            console.error("Failed to update_monitor", err);
+        })
+    );
 
     for (const model of sites.models) {
         $("<option>").text(model.name).appendTo("#settings_add_type");

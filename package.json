@@ -12,6 +12,9 @@
     "build:zip": "cd dist/ && bestzip ../multiview.zip *",
     "watch": "parcel watch src/*.html src/background.ts src/oauth_handler.ts src/picarto_frame_handler.ts"
   },
+  "browserslist": [
+    "chrome >= 54"
+  ],
   "dependencies": {
     "@types/chrome": "0.0.114",
     "@types/lodash": "^4.14.155",

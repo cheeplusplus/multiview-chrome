@@ -16,9 +16,11 @@ interface PicartoApiStream {
 }
 
 export class PicartoSite extends SiteHelper {
-    GetFollows(access_token?: string): Promise<GetFollowsResponse[]> {
+    async GetFollows(): Promise<GetFollowsResponse[]> {
+        const access_token = await this.getAccessToken();
+
         if (!access_token) {
-            return Promise.resolve([]);
+            return [];
         }
 
         const headers = {
@@ -26,8 +28,9 @@ export class PicartoSite extends SiteHelper {
             "Authorization": `Bearer ${access_token}`
         };
 
-        return agent.get(PICARTO_FOLLOW_URL).set(headers).then((res) => {
-            const body = res.body as PicartoApiResponse;
+        try {
+            const res = await agent.get(PICARTO_FOLLOW_URL).set(headers);
+            const body = (res.body as PicartoApiResponse);
             if (!body || body.length < 1) {
                 return [];
             }
@@ -39,10 +42,19 @@ export class PicartoSite extends SiteHelper {
                     "name": stream.name
                 } as GetFollowsResponse;
             }).filter("name").value();
-        });
+        } catch (err) {
+            if (err.status === 403) {
+                this.revokeAccessToken();
+            }
+            throw err;
+        }
     }
 
     GetOauthUrl(): string {
         return `https://oauth.picarto.tv/authorize?response_type=token&client_id=${PICARTO_CLIENT_ID}&redirect_uri=${PICARTO_OAUTH_REDIRECT}&scope=readpub%20readpriv&state=OAuth2Implicit`;
+    }
+
+    get OAuthSettingsKey() {
+        return "oauth.picarto";
     }
 }
