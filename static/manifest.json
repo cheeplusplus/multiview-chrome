@@ -41,6 +41,7 @@
     "permissions": [
         "https://picarto.tv/*",
         "https://api.picarto.tv/*",
+        "https://player.twitch.tv/*",
         "webRequest",
         "webRequestBlocking",
         "alarms",
