@@ -8,9 +8,9 @@
   "scripts": {
     "build": "npm-run-all build:clean build:src build:zip",
     "build:clean": "rimraf dist",
-    "build:src": "parcel build src/*.html src/background.ts src/oauth_handler.ts src/picarto_frame_handler.ts --no-source-maps",
+    "build:src": "parcel build src/*.html src/background.ts src/oauth_handler.ts --no-source-maps",
     "build:zip": "cd dist/ && bestzip ../multiview.zip *",
-    "watch": "parcel watch src/*.html src/background.ts src/oauth_handler.ts src/picarto_frame_handler.ts"
+    "watch": "parcel watch src/*.html src/background.ts src/oauth_handler.ts"
   },
   "browserslist": [
     "chrome >= 54"

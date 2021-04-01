@@ -24,15 +24,6 @@
             "js": [
                 "oauth_handler.js"
             ]
-        },
-        {
-            "matches": [
-                "https://picarto.tv/streampopout/*/public"
-            ],
-            "js": [
-                "picarto_frame_handler.js"
-            ],
-            "all_frames": true
         }
     ],
     "browser_action": {

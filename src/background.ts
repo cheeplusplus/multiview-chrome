@@ -9,12 +9,7 @@ chrome.webRequest.onHeadersReceived.addListener(
         const headers = info.responseHeaders || [];
         for (let i = headers.length - 1; i >= 0; --i) {
             const header = headers[i].name.toLowerCase();
-            if (info.url.startsWith("https://picarto.tv/")) {
-                if (header === "x-frame-options" || header === "frame-options") {
-                    // Remove header
-                    headers.splice(i, 1);
-                }
-            } else if (info.url.startsWith("https://player.twitch.tv/")) {
+            if (info.url.startsWith("https://player.twitch.tv/")) {
                 if (header === "content-security-policy") {
                     // Fix protocol in header
                     headers[i].value = headers[i].value?.replace("frame-ancestors https://" + chrome.runtime.id, "frame-ancestors chrome-extension://" + chrome.runtime.id);
@@ -26,8 +21,6 @@ chrome.webRequest.onHeadersReceived.addListener(
     {
         "urls": [
             // Override frame options to allow embedding
-            "https://picarto.tv/streampopout/*",
-            "https://picarto.tv/chatpopout/*",
             "https://player.twitch.tv/*",
         ],
         "types": ["sub_frame"]

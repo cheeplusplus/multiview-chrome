@@ -1,9 +1,8 @@
-import $ from "jquery";
 import _ from "lodash";
 import * as agent from "superagent";
 import { GetFollowsResponse, SiteHelper } from "./interfaces";
 
-const PICARTO_FOLLOW_URL = "https://api.picarto.tv/v1/user/following?priority_online=true";
+const PICARTO_FOLLOW_URL = "https://api.picarto.tv/api/v1/user/following?page=1&priority_online=true";
 const PICARTO_CLIENT_ID = "LDnggcQcithHW0d2";
 const PICARTO_OAUTH_REDIRECT = "https://cheeplusplus.github.io/multiview-chrome/picarto_oauth.html";
 
@@ -24,7 +23,7 @@ export class PicartoSite extends SiteHelper {
         }
 
         const headers = {
-            "Content-Type": "application/json",
+            "Accept": "application/json",
             "Authorization": `Bearer ${access_token}`
         };
 
